@@ -23,7 +23,7 @@
       allNixpkgs = perSystem mkNixpkgsFor;
 
       nixpkgsFor = system: allNixpkgs.${system};
-      myLibFor = system: (my-lib.lib) (nixpkgsFor system);
+      myLibFor = system: my-lib.lib (nixpkgsFor system);
     in
     flake-parts.lib.mkFlake { inherit inputs; } {
       imports = [
@@ -31,23 +31,23 @@
       ];
       inherit systems;
       perSystem = { system, config, pkgs, ... }:
-        let 
+        let
           pkgs = nixpkgsFor system;
           myLib = myLibFor system;
         in
         {
           devShells = {
-             
+
             default = myLib.mergeShells config.devShells.dev-pre-commit
-             (
-              pkgs.mkShell {
-                packages = [ 
-                  # pkgs.protobuf
+              (
+                pkgs.mkShell {
+                  packages = [
+                    # pkgs.protobuf
                   ];
-                # inputsFrom
-                # shellHook
-              }
-            );
+                  # inputsFrom
+                  # shellHook
+                }
+              );
           };
         };
     };
