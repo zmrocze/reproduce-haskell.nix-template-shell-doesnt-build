@@ -32,10 +32,10 @@
       inherit systems;
       perSystem = { system, config, pkgs, ... }:
         let
-          pkgs = nixpkgsFor system;
           myLib = myLibFor system;
         in
         {
+          _module.args.pkgs = nixpkgsFor system;
           devShells = {
 
             default = myLib.mergeShells config.devShells.dev-pre-commit
