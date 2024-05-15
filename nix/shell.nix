@@ -15,6 +15,7 @@
           name = "Project shell";
           motd = ''
             ❄️ Welcome to the {14}{bold}My nix template{reset} devshell ❄️
+            $(type -p menu &>/dev/null && menu)
           '';
           # packagesFrom = [];
           # packages = with pkgs; [
