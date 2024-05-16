@@ -26,10 +26,6 @@
       project = pkgs.haskellProject.flake { };
     in
     {
-      imports = [
-        # need to filter because stupid
-        # (builtins.trace project.devShells (lib.attrsets.getAttrs [ "apps" "checks" "packages" ] project))
-      ];
       # https://numtide.github.io/devshell/modules_schema.html
       devshells.haskell = {
         devshell = {
