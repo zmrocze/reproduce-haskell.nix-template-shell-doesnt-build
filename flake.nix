@@ -2,6 +2,10 @@
   description = "Flake template: flake-parts + pre-commit-hooks + devshell + pkgsConfig";
 
   inputs = {
+    haskellNix = {
+      url = "github:input-output-hk/haskell.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     flake-parts.url = "github:hercules-ci/flake-parts";
     pre-commit-hooks = {
       url = "github:cachix/pre-commit-hooks.nix";
@@ -13,27 +17,38 @@
       url = "github:numtide/devshell";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nixpkgs.url = "github:NixOS/nixpkgs/23.11";
   };
 
-  outputs = inputs@{ self, nixpkgs, flake-parts, my-lib, ... }:
-    let
-      myLib = my-lib.lib;
-    in
-    flake-parts.lib.mkFlake { inherit inputs; } ({ config, ... }:
-      let
-        inherit (config) pkgsFor;
-      in
+  outputs = inputs@{ flake-parts, my-lib, devshell, ... }:
+    flake-parts.lib.mkFlake { inherit inputs; }
       {
         imports = [
           ./nix/pre-commit.nix
-          ./nix/shell.nix
-          ./nix/pkgs.nix
+          ./nix/haskell.nix
+          my-lib.flakeModules.pkgs
+          devshell.flakeModule
         ];
         # systems = [ "x86_64-linux" ];
         systems = [ "x86_64-linux" "aarch64-linux" "x86_64-darwin" "aarch64-darwin" ];
-        perSystem = { system, config, pkgs, ... }:
+        pkgsConfig.overlays = [
+          my-lib.overlays.default
+        ];
+        perSystem =
+          { config, ... }:
           {
-            _module.args.pkgs = pkgsFor system;
+            # https://numtide.github.io/devshell/modules_schema.html
+            devshells.default = {
+              devshell = {
+                name = "Project shell";
+                motd = ''
+                  ❄️ Welcome to the {14}{bold}My haskell template{reset} devshell ❄️
+                  $(type -p menu &>/dev/null && menu)
+                '';
+                packagesFrom = [ config.devShells.haskell ];
+                startup.pre-commit.text = config.pre-commit.installationScript;
+              };
+            };
           };
-      });
+      };
 }
