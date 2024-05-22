@@ -26,16 +26,7 @@
       project = pkgs.haskellProject.flake { };
     in
     {
-      # https://numtide.github.io/devshell/modules_schema.html
-      devshells.haskell = {
-        devshell = {
-          name = "Haskell shell";
-          motd = ''
-            ❄️ Haskell ❄️
-          '';
-          packagesFrom = [ project.devShell ];
-        };
-      };
+      devShells.haskell = project.devShell;
       inherit (project) apps checks packages;
     };
 

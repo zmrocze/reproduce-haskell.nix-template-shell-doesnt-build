@@ -40,7 +40,7 @@
             # https://numtide.github.io/devshell/modules_schema.html
             devshells.default = {
               devshell = {
-                name = "Project shell";
+                name = "Haskell shell";
                 motd = ''
                   ❄️ Welcome to the {14}{bold}My haskell template{reset} devshell ❄️
                   $(type -p menu &>/dev/null && menu)
