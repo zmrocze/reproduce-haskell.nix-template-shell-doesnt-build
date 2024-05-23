@@ -9,7 +9,7 @@
           compiler-nix-name = "ghc928";
           shell = {
             exactDeps = true;
-            # withHoogle = true;
+            withHoogle = false;
             # packages = ps: with ps; [];
             tools = {
               # cabal = "3.6.2.0";

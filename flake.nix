@@ -46,7 +46,7 @@
                   $(type -p menu &>/dev/null && menu)
                 '';
                 packagesFrom = [ config.devShells.haskell ];
-                startup.pre-commit.text = config.pre-commit.installationScript;
+                # startup.pre-commit.text = config.pre-commit.installationScript;
               };
             };
           };
